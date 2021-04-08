@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 function App() {
+  const [showAddTask, setShowAddTask] = useState(false);
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
@@ -27,15 +28,33 @@ function App() {
       },
       body: JSON.stringify(task),
     });
+    const data = await res.json();
+    setTasks([...tasks, data]);
+  };
+
+  const deleteTask = async (id) => {
+    const res = await fetch(`http://localhost:5000/api/tasks/${id}`, {
+      method: "DELETE",
+    });
+    res.status === 200
+      ? setTasks(tasks.filter((task) => task._id !== id))
+      : alert("Error when deleting the task");
   };
 
   return (
     <Router>
       <div className="container">
-        <Header />
+        <Header
+          showAdd={showAddTask}
+          onAdd={() => setShowAddTask(!showAddTask)}
+        />
         <Route path="/" exact>
-          <AddTask onAdd={addTask} />
-          <Tasks tasks={tasks} />
+          {showAddTask && <AddTask onAdd={addTask} />}
+          {tasks.length > 0 ? (
+            <Tasks tasks={tasks} onDelete={deleteTask} />
+          ) : (
+            "No Tasks To Show"
+          )}
         </Route>
         <Route path="/about" exact>
           <About />

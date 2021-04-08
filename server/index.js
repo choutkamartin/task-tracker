@@ -31,6 +31,15 @@ app.post("/api/tasks/", (req, res) => {
     reminder: req.body.reminder,
   });
   newTask.save();
+  res.json(newTask);
+});
+
+app.delete("/api/tasks/:id", (req, res) => {
+  console.log(req.params.id);
+  Task.findByIdAndDelete(req.params.id, function (err) {
+    if (err) return res.send(500);
+    res.send(200);
+  });
 });
 
 app.listen(5000, () => console.log("Listening on port 8000"));
