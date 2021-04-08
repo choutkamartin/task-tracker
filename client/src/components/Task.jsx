@@ -1,4 +1,5 @@
 import { FaTimes } from "react-icons/fa";
+import moment from "moment";
 
 const Task = ({ task }) => {
   return (
@@ -7,7 +8,7 @@ const Task = ({ task }) => {
         {task.text}
         <FaTimes style={{ color: "red", cursor: "pointer" }} />
       </h3>
-      <p>{task.day}</p>
+      <p>{moment(task.day).format("MMMM Do YYYY, h:mm:ss a")}</p>
     </div>
   );
 };
